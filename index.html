@@ -4,6 +4,100 @@
         <link rel="stylesheet" href="web_css/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script>
+            const buildFloatWall = (keywords, canvas_id,canvas_parent_id, colour) => {
+
+                var words = {};
+                var words_attr = [];
+                string_handle(keywords);
+
+                var parent = document.getElementById(canvas_parent_id);
+                var canvas = document.getElementById(canvas_id);
+                canvas.width = parent.offsetWidth;
+                canvas.height = parent.offsetHeight;
+
+                if (canvas.getContext) {
+                    var c = canvas.getContext('2d'),
+                        w = canvas.width,
+                        h = canvas.height;
+
+                    c.strokeStyle = 'black';
+                    c.fillStyle = colour;
+                    c.lineWidth = 10;
+
+                    // constructor
+                    Word = function(key) {
+                        this.text = key;
+                        this.x = Math.random() * w;
+                        this.y = Math.random() * h;
+                        this.font = words[key] * 20  + 'px arial';
+                        this.speed = (words[key]);
+                    }
+                    for (key in words) {
+                        words_attr.push(new Word(key));
+                    }
+
+                    function animation() {
+                        for (var i = 0; i < words_attr.length; i++) {
+                            c.font = words_attr[i].font;
+                            c.fillText(words_attr[i].text, words_attr[i].x, words_attr[i].y);
+                            words_attr[i].width = c.measureText(words_attr[i].text).width;
+                            c.stroke();
+                        }
+                        move();
+                    }
+
+                    function move() {
+                        for (var i = 0; i < words_attr.length; i++) {
+                            if (words_attr[i].x > w) {
+                                words_attr[i].x = -words_attr[i].width;
+                                words_attr[i].y = Math.random()*h;
+                            }else{
+                                words_attr[i].x += words_attr[i].speed;
+                            }
+                        }
+                    }
+
+                    setInterval(function() {
+                        c.clearRect(0,0,w,h);
+                        animation();
+                    },35);
+
+                }
+
+                function string_handle(str) {
+                    var split_str = str.split(" ");
+                    var word_array = [];
+                    var word_count = [];
+                    for (var i = 0; i < split_str.length; i++) {
+                        check = true;
+                        for (var j = 0; j <= word_array.length; j++) {
+                            if (split_str[i] == word_array[j]) {
+                                word_count[j]++;
+                                check = false;
+                                break;
+                            }
+                        }
+                        if (check) {
+                            word_array.push(split_str[i]);
+                            word_count.push(1);
+                        }
+                    }
+                    for (var i = 0; i < word_array.length; i++) {
+                        words[word_array[i]] = word_count[i];
+                    }
+                    return words;
+                }
+            }
+
+            const programmingKeys = "Python Java C Arduino JavaScript React Flask Django Node.js Next.js ESP32 Android IOS React-Native Kotlin Postgres MySQL JQuery DesignPattern Scrum Agile";
+            const gameKeys = "Minecraft OverWatch LeagueOfLegends CyberPunk2077 Steam Dyson-Sphere-Program PlanetCoaster Don't-Starve Oxygen-Not-Included PC-Building-Sim Minecraft NieR:AutoMata CV6"
+            const phoneKeys = "iPhone14ProMax Galaxy-Z-Fold-4 Redmi-Note-11T-Pro-Plus Mi11Ultra MeiZu17 NintendoSwitch iPhone6s+ iPhone5s iPhone7+ iPhone13ProMax iPhoneSE3 Galaxy-S22-Ultra Pixel-6-Pro Surface-Go2 iPadPro2020 iPadPro2019 HuaWei-Nova3E HuaWei-Nova5Pro Redmi-Note4x Galaxy-S7Edge Galaxy-S20+ MeiLan-Note3 TCL-10Pro Pixel3 Galaxy-Z-Flip-3 Smartisan-R2 Smartisan-Pro3 iPhone12ProMax iPhone11ProMax Pixel5 Galaxy-S21-Ultra Galaxy-S10 Galaxy-Z-Flip-5G iPhone8+ iPhoneXr iPhone11 ZUK-Z2 Lenovo-z5s iPodTouch7 iPodClassic(160G) AppleTv ChromeCastTv FireStick MacbookPro13'(m1) MacbookPro13'(2017) MacbookPro14'(m1pro) RX6600 i5-12400f GTX1063 IKBC-C87 AppleWatch-6  AppleWatch-4 AppleWatch-8 Galaxy-Watch-4-Classic Airpods(1st) AirpodsPro(1st) AirpodsPro(2sec) Galaxy-Bud-Live Galaxy-Buds-2 Fuji-XT200";
+            window.onload = function (){
+                buildFloatWall(programmingKeys,"main-canvas-programming", "main-canvas-container-programming",'rgba(24,154,180, 0.8)');
+                buildFloatWall(gameKeys, "main-canvas-gaming", "main-canvas-container-gaming",'rgba(119, 221, 119, 0.8)');
+                buildFloatWall(phoneKeys, "main-canvas-device", "main-canvas-container-device" , 'rgba(224, 176, 255,0.8)');
+            }
+
             function showMenu() {
                 var x = document.getElementById("navBarRight");
                 if (x.className === "nav-bar-right") {
@@ -16,45 +110,86 @@
         <title>Harbour-Zhang.one</title>
     </head>
     <body>
-    <div class="nav-bar">
-        <div class="nav-bar-container">
-            <div class="nav-bar-left">
-                <img src="web_images/logo.png" class="logo-img" alt="logo"/>
-            </div>
-            <div class="nav-bar-right" id="navBarRight">
-                <div class="nav-bar-chip" >
-                    <a href="/" class="active">
-                        Home
-                    </a>
+        <div class="nav-bar">
+            <div class="nav-bar-container">
+                <div class="nav-bar-left">
+                    <img src="web_images/logo.png" class="logo-img" alt="logo"/>
                 </div>
-                <div class="nav-bar-chip">
-                    <a href="/webs">
-                        Webs
+                <div class="nav-bar-right" id="navBarRight">
+                    <div class="nav-bar-chip" >
+                        <a href="/" class="active">
+                            Home
+                        </a>
+                    </div>
+                    <div class="nav-bar-chip">
+                        <a href="/webs.html">
+                            Webs
+                        </a>
+                    </div>
+                    <div class="nav-bar-chip">
+                        <a href="/apps.html">
+                            Apps
+                        </a>
+                    </div>
+                    <div class="nav-bar-chip">
+                        <a href="/images.html">
+                            Images
+                        </a>
+                    </div>
+                    <div class="nav-bar-chip">
+                        <a href="/journal.html">
+                            Journal
+                        </a>
+                    </div>
+                    <a href="javascript:void(0);" class="icon" onclick="showMenu()">
+                        <i class="fa fa-bars"></i>
                     </a>
-                </div>
-                <div class="nav-bar-chip">
-                    <a href="/apps">
-                        Apps
-                    </a>
-                </div>
-                <div class="nav-bar-chip">
-                    <a href="/images">
-                        Images
-                    </a>
-                </div>
-                <div class="nav-bar-chip">
-                    <a href="/study">
-                        Study
-                    </a>
-                </div>
-                <a href="javascript:void(0);" class="icon" onclick="showMenu()">
-                    <i class="fa fa-bars"></i>
-                </a>
 
+                </div>
             </div>
         </div>
-    </div>
-
+        <div class="main-content">
+            <div class="main-content-info">
+                <h1>
+                    Harbour Zhang
+                </h1>
+                <h2>
+                    Student at University of Sydney
+                </h2>
+                <h2>
+                    Intern at PLCT
+                </h2>
+                <h3>
+                    <a href = "mailto: xiaofanfansteve@gmail.com">@Email</a>
+                </h3>
+                <h3>
+                    <a href="https://www.linkedin.com/in/bofan-zhang-101821193">@Linkedin</a>
+                </h3>
+                <h3>
+                    <a href="https://github.com/YourHarbour">@Github</a>
+                </h3>
+            </div>
+            <div class="main-content-detail">
+                <div class="main-content-detail-text-blue">
+                    Program
+                </div>
+                <div class="main-content-canvas" id="main-canvas-container-programming">
+                    <canvas id="main-canvas-programming" class="main-canvas"></canvas>
+                </div>
+                <div class="main-content-detail-text-green">
+                    Games Loved
+                </div>
+                <div class="main-content-canvas" id="main-canvas-container-gaming">
+                    <canvas id="main-canvas-gaming" class="main-canvas"></canvas>
+                </div>
+                <div class="main-content-detail-text-purple">
+                    Devices Played
+                </div>
+                <div class="main-content-canvas" id="main-canvas-container-device">
+                    <canvas id="main-canvas-device" class="main-canvas"></canvas>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 
